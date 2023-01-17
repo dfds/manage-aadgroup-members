@@ -1,0 +1,63 @@
+definitions:
+  aadgroup.employee:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      upn:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /user/{upn}:
+    get:
+      consumes:
+      - application/json
+      description: Return a single user based on User Principal Name
+      parameters:
+      - description: User Principal Name
+        in: path
+        name: upn
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/aadgroup.employee'
+      summary: Get user
+      tags:
+      - azuread group user
+  /users:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Post a list of users to a group
+      parameters:
+      - in: formData
+        name: groupObjectId
+        required: true
+        type: string
+      - in: formData
+        items:
+          type: string
+        name: userPrincipalNames
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: boolean
+      summary: Post users
+      tags:
+      - azuread group user
+swagger: "2.0"
