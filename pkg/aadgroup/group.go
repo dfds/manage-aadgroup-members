@@ -2,6 +2,7 @@ package aadgroup
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -62,7 +63,7 @@ func addUsersToGroup(groupObjectId string, userPrincipalNames []string) error {
 // getGroupName takes a GraphServiceClient and a group object id, and return the name of an Azure AD Group
 func getGroupName(client *msgraphsdk.GraphServiceClient, groupObjectId string) (string, error) {
 	log := logging.GetLogger()
-	grp, err := client.GroupsById(groupObjectId).Get(nil)
+	grp, err := client.GroupsById(groupObjectId).Get(context.Background(), nil)
 	if err != nil {
 		log.Error(err)
 		return "", err
@@ -122,7 +123,7 @@ func addMemberToGroup(client *msgraphsdk.GraphServiceClient, groupObjectId strin
 	_ = unmarshalErr
 
 	if graphError != (GraphError{}) {
-		log.Debug(string(bytes)) // TODO: Remove debug
+		log.Debug(string(bytes))
 		if graphError.Error.Code == "Request_BadRequest" {
 			log.Error(err.Error())
 			return nil
@@ -159,6 +160,9 @@ func removeUserFromGroup(groupObjectId string, userPrincipalName string) error {
 		return err
 	}
 
-	client.GroupsById(groupObjectId).MembersById(user.ObjectId) //.$ref().Delete(context.Background(), nil)
+	graphError := client.GroupsById(groupObjectId).MembersById(user.ObjectId).Ref().Delete(context.Background(), nil)
+	if graphError != nil {
+		return graphError
+	}
 	return nil
 }

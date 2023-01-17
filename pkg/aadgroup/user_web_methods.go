@@ -16,14 +16,14 @@ func GetIndex(c *gin.Context) {
 // GraphClient will kill the main process if it is not working.
 func GetHealth(c *gin.Context) {
 	log := logging.GetLogger()
+	statusCode := http.StatusOK
+	message := http.StatusText(http.StatusOK)
 	client, err := getGraphClient()
 	_ = client
-	statusCode := 200
-	message := "OK"
 	if err != nil {
 		log.Error(err.Error())
-		statusCode = 500
-		message = "ERROR"
+		statusCode = http.StatusInternalServerError
+		message = err.Error()
 	}
 	c.JSON(statusCode, gin.H{
 		"message": message,
@@ -43,12 +43,14 @@ func GetHealth(c *gin.Context) {
 // @Router 			/user/{upn} [get]
 func GetUser(c *gin.Context) {
 	log := logging.GetLogger()
+	statusCode := http.StatusOK
 	upn := c.Param("upn")
 	employee, err := getUserFromAAD(upn)
 	if err != nil {
 		log.Error(err.Error())
+		statusCode = http.StatusInternalServerError
 	}
-	c.IndentedJSON(http.StatusOK, employee)
+	c.IndentedJSON(statusCode, employee)
 }
 
 // AddUsers godoc
@@ -64,12 +66,14 @@ func GetUser(c *gin.Context) {
 // @Router 			/users [post]
 func AddUsers(c *gin.Context) {
 	log := logging.GetLogger()
-	retVal := true
+	statusCode := http.StatusCreated
+	message := http.StatusText(http.StatusCreated)
 	var group GroupMembers
 	err := c.Bind(&group)
 	if err != nil {
 		log.Error(err.Error())
-		retVal = false
+		statusCode = http.StatusInternalServerError
+		message = err.Error()
 	}
 
 	// If GroupObjectId is not supplied through the API, then read it from environment variable
@@ -81,10 +85,13 @@ func AddUsers(c *gin.Context) {
 	err = addUsersToGroup(groupObjectId, group.UserPrincipalNames)
 	if err != nil {
 		log.Error(err.Error())
-		retVal = false
+		statusCode = http.StatusInternalServerError
+		message = err.Error()
 	}
 
-	c.IndentedJSON(http.StatusCreated, retVal)
+	c.JSON(statusCode, gin.H{
+		"message": message,
+	})
 }
 
 // RemoveUser godoc
@@ -100,13 +107,13 @@ func AddUsers(c *gin.Context) {
 // @Router 			/user [delete]
 func RemoveUser(c *gin.Context) {
 	log := logging.GetLogger()
-	statusCode := 204
-	message := "No Content"
+	statusCode := http.StatusNoContent
+	message := http.StatusText(http.StatusNoContent)
 	var group GroupMember
 	err := c.Bind(&group)
 	if err != nil {
 		log.Error(err.Error())
-		statusCode = 500
+		statusCode = http.StatusInternalServerError
 		message = err.Error()
 	}
 
@@ -119,10 +126,44 @@ func RemoveUser(c *gin.Context) {
 	err = removeUserFromGroup(groupObjectId, group.UserPrincipalName)
 	if err != nil {
 		log.Error(err.Error())
-		statusCode = 500
+		statusCode = http.StatusInternalServerError
 		message = err.Error()
 	}
 
+	c.JSON(statusCode, gin.H{
+		"message": message,
+	})
+}
+
+// GetUsers godoc
+// @BasePath 		/aadgroup/api/v1
+// @Summary 		Get list of users from group
+// @Schemes
+// @Description 	Return all users from a group
+// @Tags 			azuread group user
+// @Accept 			json
+// @Produce 		json
+// @Param 			groupObjectId	path	string	true	"Group ObjectId"
+// @Success 		200 {object} employee
+// @Router 			/user/{upn} [get]
+func GetUsers(c *gin.Context) {
+	log := logging.GetLogger()
+	statusCode := http.StatusOK
+	message := http.StatusText(http.StatusOK)
+	groupObjectId := c.Param("groupObjectId")
+	_ = groupObjectId
+	_ = log
+	// TODO: Do something
+	/*
+		if err != nil {
+			log.Error(err.Error())
+		}
+		if err != nil {
+			log.Error(err.Error())
+			statusCode = http.StatusInternalServerError
+			message = err.Error()
+		}
+	*/
 	c.JSON(statusCode, gin.H{
 		"message": message,
 	})

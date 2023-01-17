@@ -9,7 +9,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/dfds/manage-aadgroup-members/pkg/config"
 	"github.com/dfds/manage-aadgroup-members/pkg/logging"
-	msazureauth "github.com/microsoft/kiota/authentication/go/azure"
+	msazureauth "github.com/microsoft/kiota-authentication-azure-go"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
 )
 

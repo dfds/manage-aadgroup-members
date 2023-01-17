@@ -54,7 +54,7 @@ const docTemplate = `{
         },
         "/user/{upn}": {
             "get": {
-                "description": "Return a single user based on User Principal Name",
+                "description": "Return all users from a group",
                 "consumes": [
                     "application/json"
                 ],
@@ -64,12 +64,12 @@ const docTemplate = `{
                 "tags": [
                     "azuread group user"
                 ],
-                "summary": "Get user",
+                "summary": "Get list of users from group",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "User Principal Name",
-                        "name": "upn",
+                        "description": "Group ObjectId",
+                        "name": "groupObjectId",
                         "in": "path",
                         "required": true
                     }

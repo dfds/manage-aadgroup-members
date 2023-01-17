@@ -40,11 +40,11 @@ paths:
     get:
       consumes:
       - application/json
-      description: Return a single user based on User Principal Name
+      description: Return all users from a group
       parameters:
-      - description: User Principal Name
+      - description: Group ObjectId
         in: path
-        name: upn
+        name: groupObjectId
         required: true
         type: string
       produces:
@@ -54,7 +54,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/aadgroup.employee'
-      summary: Get user
+      summary: Get list of users from group
       tags:
       - azuread group user
   /users:

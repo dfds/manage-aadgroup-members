@@ -1,6 +1,10 @@
 package aadgroup
 
-import "github.com/dfds/manage-aadgroup-members/pkg/logging"
+import (
+	"context"
+
+	"github.com/dfds/manage-aadgroup-members/pkg/logging"
+)
 
 type employee struct {
 	ObjectId          string `json:"id"`
@@ -17,7 +21,7 @@ func getUserFromAAD(user string) (*employee, error) {
 		log.Error(err)
 		return nil, err
 	}
-	usr, err := client.UsersById(user).Get(nil)
+	usr, err := client.UsersById(user).Get(context.Background(), nil)
 	if err != nil {
 		log.Error(err)
 		return nil, err
