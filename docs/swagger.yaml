@@ -38,11 +38,10 @@ paths:
     post:
       consumes:
       - multipart/form-data
-      description: Post a list of users to a group
+      description: Add a list of users to a group
       parameters:
       - in: formData
         name: groupObjectId
-        required: true
         type: string
       - in: formData
         items:
@@ -57,7 +56,7 @@ paths:
           description: Created
           schema:
             type: boolean
-      summary: Post users
+      summary: Add users to group
       tags:
       - azuread group user
 swagger: "2.0"

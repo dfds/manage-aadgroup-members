@@ -50,7 +50,7 @@ const docTemplate = `{
         },
         "/users": {
             "post": {
-                "description": "Post a list of users to a group",
+                "description": "Add a list of users to a group",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -60,13 +60,12 @@ const docTemplate = `{
                 "tags": [
                     "azuread group user"
                 ],
-                "summary": "Post users",
+                "summary": "Add users to group",
                 "parameters": [
                     {
                         "type": "string",
                         "name": "groupObjectId",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "array",

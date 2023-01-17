@@ -21,9 +21,9 @@ func main() {
 	v1 := router.Group("/aadgroup/api/v1")
 	{
 		v1.GET("/user/:upn", aadgroup.GetUser)
-		//v1.DELETE("/user", aadgroup.DeleteUser)
+		//v1.DELETE("/user", aadgroup.RemoveUser)
 		//v1.GET("/users", aadgroup.GetUsers)
-		v1.POST("/users", aadgroup.PostUsers)
+		v1.POST("/users", aadgroup.AddUsers)
 	}
 	router.GET("/aadgroup/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.GET("/aadgroup/healthz", aadgroup.GetHealth)

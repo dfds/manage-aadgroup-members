@@ -13,12 +13,12 @@ import (
 )
 
 type GroupMember struct {
-	GroupObjectId      string `json:"groupObjectId" form:"groupObjectId" binding:"required"`
+	GroupObjectId      string `json:"groupObjectId" form:"groupObjectId"`
 	UserPrincipalNames string `json:"userPrincipalName" form:"userPrincipalName" binding:"required"`
 }
 
 type GroupMembers struct {
-	GroupObjectId      string   `json:"groupObjectId" form:"groupObjectId" binding:"required"`
+	GroupObjectId      string   `json:"groupObjectId" form:"groupObjectId"`
 	UserPrincipalNames []string `json:"userPrincipalNames" form:"userPrincipalNames" binding:"required"`
 }
 
@@ -123,7 +123,8 @@ func addMemberToGroup(client *msgraphsdk.GraphServiceClient, groupObjectId strin
 
 	if graphError != (GraphError{}) {
 		log.Debug(string(bytes)) // TODO: Remove debug
-		if graphError.Error.Code == "Request_BadRequest" && graphError.Error.Message == "One or more added object references already exist for the following modified properties: 'members'." {
+		if graphError.Error.Code == "Request_BadRequest" {
+			log.Error(err.Error())
 			return nil
 		}
 		return errors.New(graphError.Error.Code)

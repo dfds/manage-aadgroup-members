@@ -49,18 +49,18 @@ func GetUser(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, employee)
 }
 
-// PostUsers godoc
+// AddUsers godoc
 // @BasePath 		/aadgroup/api/v1
-// @Summary 		Post users
+// @Summary 		Add users to group
 // @Schemes
-// @Description 	Post a list of users to a group
+// @Description 	Add a list of users to a group
 // @Tags 			azuread group user
 // @Accept 			multipart/form-data
 // @Produce 		json
 // @Param			groupMembers		formData	GroupMembers	true	"The group members with group ObjectId"
 // @Success 		201 {boolean} true
 // @Router 			/users [post]
-func PostUsers(c *gin.Context) {
+func AddUsers(c *gin.Context) {
 	log := logging.GetLogger()
 	retVal := true
 	var group GroupMembers
