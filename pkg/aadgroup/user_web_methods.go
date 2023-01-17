@@ -44,7 +44,7 @@ func GetUser(c *gin.Context) {
 	upn := c.Param("upn")
 	employee, err := getUserFromAAD(upn)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Error(err.Error())
 	}
 	c.IndentedJSON(http.StatusOK, employee)
 }
@@ -66,7 +66,7 @@ func PostUsers(c *gin.Context) {
 	var group GroupMembers
 	err := c.Bind(&group)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Error(err.Error())
 		retVal = false
 	}
 
@@ -78,7 +78,7 @@ func PostUsers(c *gin.Context) {
 
 	err = addUsersToGroup(groupObjectId, group.UserPrincipalNames)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Error(err.Error())
 		retVal = false
 	}
 
