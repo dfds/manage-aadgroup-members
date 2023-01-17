@@ -18,13 +18,15 @@ func GetHealth(c *gin.Context) {
 	log := logging.GetLogger()
 	client, err := getGraphClient()
 	_ = client
-	healthy := true
+	statusCode := 200
+	message := "OK"
 	if err != nil {
 		log.Error(err.Error())
-		healthy = false
+		statusCode = 500
+		message = "ERROR"
 	}
-	c.JSON(200, gin.H{
-		"message": healthy,
+	c.JSON(statusCode, gin.H{
+		"message": message,
 	})
 }
 
