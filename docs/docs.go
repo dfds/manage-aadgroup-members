@@ -16,6 +16,42 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/user": {
+            "delete": {
+                "description": "Remove a single user from a group",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "azuread group user"
+                ],
+                "summary": "Remove user from group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "groupObjectId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "userPrincipalName",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{upn}": {
             "get": {
                 "description": "Return a single user based on User Principal Name",

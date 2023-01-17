@@ -13,8 +13,8 @@ import (
 )
 
 type GroupMember struct {
-	GroupObjectId      string `json:"groupObjectId" form:"groupObjectId"`
-	UserPrincipalNames string `json:"userPrincipalName" form:"userPrincipalName" binding:"required"`
+	GroupObjectId     string `json:"groupObjectId" form:"groupObjectId"`
+	UserPrincipalName string `json:"userPrincipalName" form:"userPrincipalName" binding:"required"`
 }
 
 type GroupMembers struct {
@@ -141,5 +141,24 @@ func addMemberToGroup(client *msgraphsdk.GraphServiceClient, groupObjectId strin
 	}
 
 	log.Infof("Added %s to %s group", user.Name, groupName)
+	return nil
+}
+
+// removeUserFromGroup takes a single user principal name (UPNs) and a group objectId, then removes it from an Azure AD Group
+func removeUserFromGroup(groupObjectId string, userPrincipalName string) error {
+	log := logging.GetLogger()
+	client, err := getGraphClient()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	user, err := getUserFromAAD(userPrincipalName)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	client.GroupsById(groupObjectId).MembersById(user.ObjectId) //.$ref().Delete(context.Background(), nil)
 	return nil
 }

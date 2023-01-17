@@ -13,6 +13,29 @@ definitions:
 info:
   contact: {}
 paths:
+  /user:
+    delete:
+      consumes:
+      - multipart/form-data
+      description: Remove a single user from a group
+      parameters:
+      - in: formData
+        name: groupObjectId
+        type: string
+      - in: formData
+        name: userPrincipalName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+      summary: Remove user from group
+      tags:
+      - azuread group user
   /user/{upn}:
     get:
       consumes:

@@ -86,3 +86,44 @@ func AddUsers(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusCreated, retVal)
 }
+
+// RemoveUser godoc
+// @BasePath 		/aadgroup/api/v1
+// @Summary 		Remove user from group
+// @Schemes
+// @Description 	Remove a single user from a group
+// @Tags 			azuread group user
+// @Accept 			multipart/form-data
+// @Produce 		json
+// @Param			groupMember		formData	GroupMember	true	"The group member with group ObjectId"
+// @Success 		204 {string} No Content
+// @Router 			/user [delete]
+func RemoveUser(c *gin.Context) {
+	log := logging.GetLogger()
+	statusCode := 204
+	message := "No Content"
+	var group GroupMember
+	err := c.Bind(&group)
+	if err != nil {
+		log.Error(err.Error())
+		statusCode = 500
+		message = err.Error()
+	}
+
+	// If GroupObjectId is not supplied through the API, then read it from environment variable
+	groupObjectId := group.GroupObjectId
+	if groupObjectId == "" {
+		groupObjectId = config.GroupId()
+	}
+
+	err = removeUserFromGroup(groupObjectId, group.UserPrincipalName)
+	if err != nil {
+		log.Error(err.Error())
+		statusCode = 500
+		message = err.Error()
+	}
+
+	c.JSON(statusCode, gin.H{
+		"message": message,
+	})
+}
