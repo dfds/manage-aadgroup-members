@@ -28,7 +28,7 @@ make
 make run
 ```
 
-### Run woth Docker Compose
+### Run with Docker Compose
 
 ```bash
 make start

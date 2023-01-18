@@ -11,6 +11,7 @@ import (
 
 	"github.com/dfds/manage-aadgroup-members/pkg/logging"
 	msgraphsdk "github.com/microsoftgraph/msgraph-sdk-go"
+	"github.com/microsoftgraph/msgraph-sdk-go/models"
 )
 
 type GroupMember struct {
@@ -165,4 +166,21 @@ func removeUserFromGroup(groupObjectId string, userPrincipalName string) error {
 		return graphError
 	}
 	return nil
+}
+
+// getUsersFromGroup takes a single group objectId, then returns a list of users
+func getUsersFromGroup(groupObjectId string) (models.DirectoryObjectCollectionResponseable, error) {
+	log := logging.GetLogger()
+	client, err := getGraphClient()
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	users, err := client.GroupsById(groupObjectId).Members().Get(context.Background(), nil)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return users, nil
 }

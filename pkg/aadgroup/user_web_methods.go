@@ -143,28 +143,25 @@ func RemoveUser(c *gin.Context) {
 // @Tags 			azuread group user
 // @Accept 			json
 // @Produce 		json
-// @Param 			groupObjectId	path	string	true	"Group ObjectId"
+// @Param 			groupObjectId	path	string	false	"Group ObjectId"
 // @Success 		200 {object} employee
-// @Router 			/user/{upn} [get]
+// @Router 			/users/{groupObjectId} [get]
 func GetUsers(c *gin.Context) {
 	log := logging.GetLogger()
 	statusCode := http.StatusOK
-	message := http.StatusText(http.StatusOK)
+
 	groupObjectId := c.Param("groupObjectId")
-	_ = groupObjectId
-	_ = log
-	// TODO: Do something
-	/*
-		if err != nil {
-			log.Error(err.Error())
-		}
-		if err != nil {
-			log.Error(err.Error())
-			statusCode = http.StatusInternalServerError
-			message = err.Error()
-		}
-	*/
+	group := groupObjectId
+	if group == "" {
+		group = config.GroupId()
+	}
+
+	users, err := getUsersFromGroup(group)
+	if err != nil {
+		statusCode = http.StatusInternalServerError
+		log.Error(err)
+	}
 	c.JSON(statusCode, gin.H{
-		"message": message,
+		"message": users.GetValue(),
 	})
 }

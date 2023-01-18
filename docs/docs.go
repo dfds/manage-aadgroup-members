@@ -54,7 +54,7 @@ const docTemplate = `{
         },
         "/user/{upn}": {
             "get": {
-                "description": "Return all users from a group",
+                "description": "Return a single user based on User Principal Name",
                 "consumes": [
                     "application/json"
                 ],
@@ -64,12 +64,12 @@ const docTemplate = `{
                 "tags": [
                     "azuread group user"
                 ],
-                "summary": "Get list of users from group",
+                "summary": "Get user",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Group ObjectId",
-                        "name": "groupObjectId",
+                        "description": "User Principal Name",
+                        "name": "upn",
                         "in": "path",
                         "required": true
                     }
@@ -118,6 +118,37 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{groupObjectId}": {
+            "get": {
+                "description": "Return all users from a group",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "azuread group user"
+                ],
+                "summary": "Get list of users from group",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Group ObjectId",
+                        "name": "groupObjectId",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/aadgroup.employee"
                         }
                     }
                 }
